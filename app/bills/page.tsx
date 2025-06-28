@@ -167,118 +167,121 @@ export default function BillReminders() {
   }
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+        className="flex flex-col gap-4"
       >
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Bill Payment Reminders</h1>
-          <p className="text-muted-foreground">
-            Stay on top of your recurring bills and never miss a payment.
-          </p>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Bill Payment Reminders</h1>
+            <p className="text-muted-foreground text-sm sm:text-base">
+              Stay on top of your recurring bills and never miss a payment.
+            </p>
+          </div>
+
+          <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+            <DialogTrigger asChild>
+              <Button className="gap-2 w-full sm:w-auto">
+                <Plus className="h-4 w-4" />
+                Add Bill Reminder
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md mx-4 sm:mx-0">
+              <DialogHeader>
+                <DialogTitle>Add Bill Reminder</DialogTitle>
+              </DialogHeader>
+              <form onSubmit={handleAddBill} className="space-y-4">
+                <div>
+                  <Label htmlFor="name">Bill Name</Label>
+                  <Input
+                    id="name"
+                    value={formData.name}
+                    onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                    placeholder="e.g., Electricity Bill"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="amount">Amount</Label>
+                  <Input
+                    id="amount"
+                    type="number"
+                    step="0.01"
+                    value={formData.amount}
+                    onChange={(e) => setFormData(prev => ({ ...prev, amount: e.target.value }))}
+                    placeholder="0.00"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="category">Category</Label>
+                  <Select
+                    value={formData.category}
+                    onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}
+                    required
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {BILL_CATEGORIES.map((category) => (
+                        <SelectItem key={category} value={category}>
+                          {category}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label>Due Date</Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full justify-start text-left font-normal",
+                          !formData.due_date && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {formData.due_date ? format(formData.due_date, "PPP") : <span>Pick a date</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0">
+                      <Calendar
+                        mode="single"
+                        selected={formData.due_date}
+                        onSelect={(date) => date && setFormData(prev => ({ ...prev, due_date: date }))}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <Button type="submit" className="flex-1">
+                    Add Bill Reminder
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setIsAddModalOpen(false)}
+                    className="flex-1 sm:flex-none"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </form>
+            </DialogContent>
+          </Dialog>
         </div>
-
-        <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
-          <DialogTrigger asChild>
-            <Button className="gap-2">
-              <Plus className="h-4 w-4" />
-              Add Bill Reminder
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle>Add Bill Reminder</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleAddBill} className="space-y-4">
-              <div>
-                <Label htmlFor="name">Bill Name</Label>
-                <Input
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                  placeholder="e.g., Electricity Bill"
-                  required
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="amount">Amount</Label>
-                <Input
-                  id="amount"
-                  type="number"
-                  step="0.01"
-                  value={formData.amount}
-                  onChange={(e) => setFormData(prev => ({ ...prev, amount: e.target.value }))}
-                  placeholder="0.00"
-                  required
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="category">Category</Label>
-                <Select
-                  value={formData.category}
-                  onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}
-                  required
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {BILL_CATEGORIES.map((category) => (
-                      <SelectItem key={category} value={category}>
-                        {category}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Label>Due Date</Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={cn(
-                        "w-full justify-start text-left font-normal",
-                        !formData.due_date && "text-muted-foreground"
-                      )}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {formData.due_date ? format(formData.due_date, "PPP") : <span>Pick a date</span>}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={formData.due_date}
-                      onSelect={(date) => date && setFormData(prev => ({ ...prev, due_date: date }))}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-
-              <div className="flex gap-2">
-                <Button type="submit" className="flex-1">
-                  Add Bill Reminder
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setIsAddModalOpen(false)}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </form>
-          </DialogContent>
-        </Dialog>
       </motion.div>
 
       {/* Summary Cards */}
@@ -286,42 +289,42 @@ export default function BillReminders() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
-        className="grid gap-6 md:grid-cols-3"
+        className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-3"
       >
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="pt-4 sm:pt-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Upcoming Bills</p>
-                <p className="text-2xl font-bold">{upcomingBills.length}</p>
+                <p className="text-xl sm:text-2xl font-bold">{upcomingBills.length}</p>
               </div>
-              <Clock className="h-8 w-8 text-blue-500" />
+              <Clock className="h-6 w-6 sm:h-8 sm:w-8 text-blue-500" />
             </div>
           </CardContent>
         </Card>
         
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="pt-4 sm:pt-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Total Amount Due</p>
-                <p className="text-2xl font-bold">
+                <p className="text-xl sm:text-2xl font-bold">
                   ${upcomingBills.reduce((sum, bill) => sum + Number(bill.amount), 0).toFixed(2)}
                 </p>
               </div>
-              <AlertTriangle className="h-8 w-8 text-orange-500" />
+              <AlertTriangle className="h-6 w-6 sm:h-8 sm:w-8 text-orange-500" />
             </div>
           </CardContent>
         </Card>
 
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="pt-4 sm:pt-6">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Paid This Month</p>
-                <p className="text-2xl font-bold">{paidBills.length}</p>
+                <p className="text-xl sm:text-2xl font-bold">{paidBills.length}</p>
               </div>
-              <CheckCircle className="h-8 w-8 text-green-500" />
+              <CheckCircle className="h-6 w-6 sm:h-8 sm:w-8 text-green-500" />
             </div>
           </CardContent>
         </Card>
@@ -335,11 +338,11 @@ export default function BillReminders() {
       >
         <Card>
           <CardHeader>
-            <CardTitle>Upcoming Bills ({upcomingBills.length})</CardTitle>
+            <CardTitle className="text-lg sm:text-xl">Upcoming Bills ({upcomingBills.length})</CardTitle>
           </CardHeader>
           <CardContent>
             {upcomingBills.length > 0 ? (
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 <AnimatePresence>
                   {upcomingBills.map((bill, index) => {
                     const billStatus = getBillStatus(bill.due_date, bill.is_paid);
@@ -353,20 +356,21 @@ export default function BillReminders() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.3, delay: index * 0.02 }}
-                        className="group flex items-center justify-between p-4 rounded-lg border bg-card hover:bg-accent/50 transition-all duration-200"
+                        className="group flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-lg border bg-card hover:bg-accent/50 transition-all duration-200 gap-3 sm:gap-4"
                       >
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-start gap-3 sm:gap-4 flex-1 min-w-0">
                           <Checkbox
                             checked={bill.is_paid}
                             onCheckedChange={() => handleTogglePaid(bill.id, bill.is_paid)}
+                            className="mt-1"
                           />
-                          <div>
-                            <p className="font-medium">{bill.name}</p>
-                            <div className="flex items-center gap-2 mt-1">
-                              <p className="text-sm text-muted-foreground">
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-sm sm:text-base truncate">{bill.name}</p>
+                            <div className="flex flex-wrap items-center gap-2 mt-1">
+                              <p className="text-xs sm:text-sm text-muted-foreground">
                                 Due: {format(new Date(bill.due_date), 'MMM dd, yyyy')}
                               </p>
-                              <Badge variant="outline" className={billStatus.color}>
+                              <Badge variant="outline" className={`${billStatus.color} text-xs`}>
                                 <StatusIcon className="w-3 h-3 mr-1" />
                                 {daysUntilDue < 0 ? 'Overdue' : 
                                  daysUntilDue === 0 ? 'Due Today' :
@@ -376,17 +380,19 @@ export default function BillReminders() {
                             </div>
                           </div>
                         </div>
-                        <div className="flex items-center gap-4">
-                          <Badge
-                            variant="outline"
-                            className={getCategoryColor(bill.category)}
-                          >
-                            {bill.category}
-                          </Badge>
-                          <p className="font-semibold text-lg">
-                            ${Number(bill.amount).toFixed(2)}
-                          </p>
-                          <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="flex flex-row sm:flex-row items-center justify-between sm:justify-end gap-3 sm:gap-4">
+                          <div className="flex items-center gap-2 sm:gap-3">
+                            <Badge
+                              variant="outline"
+                              className={`${getCategoryColor(bill.category)} text-xs whitespace-nowrap`}
+                            >
+                              {bill.category}
+                            </Badge>
+                            <p className="font-semibold text-base sm:text-lg whitespace-nowrap">
+                              ${Number(bill.amount).toFixed(2)}
+                            </p>
+                          </div>
+                          <div className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                             <Button
                               size="sm"
                               variant="ghost"
@@ -403,9 +409,9 @@ export default function BillReminders() {
                 </AnimatePresence>
               </div>
             ) : (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground text-lg">No upcoming bills</p>
-                <p className="text-sm text-muted-foreground mt-1">
+              <div className="text-center py-8 sm:py-12">
+                <p className="text-muted-foreground text-base sm:text-lg">No upcoming bills</p>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1">
                   Add bill reminders to stay organized
                 </p>
               </div>
@@ -423,42 +429,45 @@ export default function BillReminders() {
         >
           <Card>
             <CardHeader>
-              <CardTitle>Paid Bills ({paidBills.length})</CardTitle>
+              <CardTitle className="text-lg sm:text-xl">Paid Bills ({paidBills.length})</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {paidBills.map((bill, index) => (
                   <motion.div
                     key={bill.id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: index * 0.02 }}
-                    className="group flex items-center justify-between p-4 rounded-lg border bg-card hover:bg-accent/50 transition-all duration-200 opacity-60"
+                    className="group flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-lg border bg-card hover:bg-accent/50 transition-all duration-200 opacity-60 gap-3 sm:gap-4"
                   >
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-start gap-3 sm:gap-4 flex-1 min-w-0">
                       <Checkbox
                         checked={bill.is_paid}
                         onCheckedChange={() => handleTogglePaid(bill.id, bill.is_paid)}
+                        className="mt-1"
                       />
-                      <div>
-                        <p className="font-medium line-through">{bill.name}</p>
-                        <p className="text-sm text-muted-foreground">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium line-through text-sm sm:text-base truncate">{bill.name}</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground">
                           Due: {format(new Date(bill.due_date), 'MMM dd, yyyy')}
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-4">
-                      <Badge
-                        variant="outline"
-                        className="bg-green-100 text-green-800 border-green-200"
-                      >
-                        <CheckCircle className="w-3 h-3 mr-1" />
-                        Paid
-                      </Badge>
-                      <p className="font-semibold text-lg">
-                        ${Number(bill.amount).toFixed(2)}
-                      </p>
-                      <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex flex-row sm:flex-row items-center justify-between sm:justify-end gap-3 sm:gap-4">
+                      <div className="flex items-center gap-2 sm:gap-3">
+                        <Badge
+                          variant="outline"
+                          className="bg-green-100 text-green-800 border-green-200 text-xs"
+                        >
+                          <CheckCircle className="w-3 h-3 mr-1" />
+                          Paid
+                        </Badge>
+                        <p className="font-semibold text-base sm:text-lg whitespace-nowrap">
+                          ${Number(bill.amount).toFixed(2)}
+                        </p>
+                      </div>
+                      <div className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                         <Button
                           size="sm"
                           variant="ghost"

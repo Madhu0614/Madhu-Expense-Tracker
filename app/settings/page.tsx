@@ -92,15 +92,15 @@ export default function Settings() {
   };
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
-        <p className="text-muted-foreground">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Settings</h1>
+        <p className="text-muted-foreground text-sm sm:text-base">
           Customize your expense tracking experience.
         </p>
       </motion.div>
@@ -113,15 +113,15 @@ export default function Settings() {
       >
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <User className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+              <User className="h-4 w-4 sm:h-5 sm:w-5" />
               Profile & Preferences
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
               <div>
-                <Label htmlFor="name">Full Name</Label>
+                <Label htmlFor="name" className="text-sm">Full Name</Label>
                 <Input
                   id="name"
                   value={settings.profile.name}
@@ -129,10 +129,11 @@ export default function Settings() {
                     ...prev,
                     profile: { ...prev.profile, name: e.target.value }
                   }))}
+                  className="text-sm"
                 />
               </div>
               <div>
-                <Label htmlFor="email">Email Address</Label>
+                <Label htmlFor="email" className="text-sm">Email Address</Label>
                 <Input
                   id="email"
                   type="email"
@@ -141,12 +142,13 @@ export default function Settings() {
                     ...prev,
                     profile: { ...prev.profile, email: e.target.value }
                   }))}
+                  className="text-sm"
                 />
               </div>
             </div>
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
               <div>
-                <Label htmlFor="currency">Default Currency</Label>
+                <Label htmlFor="currency" className="text-sm">Default Currency</Label>
                 <Select
                   value={settings.profile.currency}
                   onValueChange={(value) => setSettings(prev => ({
@@ -167,7 +169,7 @@ export default function Settings() {
                 </Select>
               </div>
               <div>
-                <Label htmlFor="timezone">Timezone</Label>
+                <Label htmlFor="timezone" className="text-sm">Timezone</Label>
                 <Select
                   value={settings.profile.timezone}
                   onValueChange={(value) => setSettings(prev => ({
@@ -200,15 +202,15 @@ export default function Settings() {
       >
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <DollarSign className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+              <DollarSign className="h-4 w-4 sm:h-5 sm:w-5" />
               Budget Management
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
               <div>
-                <Label htmlFor="monthlyBudget">Monthly Budget</Label>
+                <Label htmlFor="monthlyBudget" className="text-sm">Monthly Budget</Label>
                 <Input
                   id="monthlyBudget"
                   type="number"
@@ -218,10 +220,11 @@ export default function Settings() {
                     ...prev,
                     budget: { ...prev.budget, monthlyBudget: e.target.value }
                   }))}
+                  className="text-sm"
                 />
               </div>
               <div>
-                <Label htmlFor="overspendWarning">Overspend Warning (%)</Label>
+                <Label htmlFor="overspendWarning" className="text-sm">Overspend Warning (%)</Label>
                 <Input
                   id="overspendWarning"
                   type="number"
@@ -232,13 +235,14 @@ export default function Settings() {
                     ...prev,
                     budget: { ...prev.budget, overspendWarning: parseInt(e.target.value) }
                   }))}
+                  className="text-sm"
                 />
               </div>
             </div>
             <div className="flex items-center justify-between">
               <div>
-                <Label htmlFor="budgetAlerts">Budget Alerts</Label>
-                <p className="text-sm text-muted-foreground">
+                <Label htmlFor="budgetAlerts" className="text-sm">Budget Alerts</Label>
+                <p className="text-xs sm:text-sm text-muted-foreground">
                   Get notified when approaching budget limits
                 </p>
               </div>
@@ -263,8 +267,8 @@ export default function Settings() {
       >
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Bell className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+              <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
               Notifications
             </CardTitle>
           </CardHeader>
@@ -272,8 +276,8 @@ export default function Settings() {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>Email Notifications</Label>
-                  <p className="text-sm text-muted-foreground">
+                  <Label className="text-sm">Email Notifications</Label>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
                     Receive notifications via email
                   </p>
                 </div>
@@ -288,8 +292,8 @@ export default function Settings() {
               <Separator />
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>Push Notifications</Label>
-                  <p className="text-sm text-muted-foreground">
+                  <Label className="text-sm">Push Notifications</Label>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
                     Receive browser push notifications
                   </p>
                 </div>
@@ -304,8 +308,8 @@ export default function Settings() {
               <Separator />
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>Bill Reminders</Label>
-                  <p className="text-sm text-muted-foreground">
+                  <Label className="text-sm">Bill Reminders</Label>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
                     Get reminders before bill due dates
                   </p>
                 </div>
@@ -320,8 +324,8 @@ export default function Settings() {
               <Separator />
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>Subscription Alerts</Label>
-                  <p className="text-sm text-muted-foreground">
+                  <Label className="text-sm">Subscription Alerts</Label>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
                     Notifications for subscription renewals
                   </p>
                 </div>
@@ -335,7 +339,7 @@ export default function Settings() {
               </div>
             </div>
             <div>
-              <Label htmlFor="reminderDays">Reminder Days Before Due Date</Label>
+              <Label htmlFor="reminderDays" className="text-sm">Reminder Days Before Due Date</Label>
               <Input
                 id="reminderDays"
                 type="number"
@@ -346,7 +350,7 @@ export default function Settings() {
                   ...prev,
                   notifications: { ...prev.notifications, reminderDays: parseInt(e.target.value) }
                 }))}
-                className="w-24"
+                className="w-24 text-sm"
               />
             </div>
           </CardContent>
@@ -361,14 +365,14 @@ export default function Settings() {
       >
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Palette className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+              <Palette className="h-4 w-4 sm:h-5 sm:w-5" />
               Appearance
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <Label htmlFor="theme">Theme</Label>
+              <Label htmlFor="theme" className="text-sm">Theme</Label>
               <Select
                 value={settings.appearance.theme}
                 onValueChange={(value) => setSettings(prev => ({
@@ -376,7 +380,7 @@ export default function Settings() {
                   appearance: { ...prev.appearance, theme: value }
                 }))}
               >
-                <SelectTrigger className="w-48">
+                <SelectTrigger className="w-full sm:w-48">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -389,8 +393,8 @@ export default function Settings() {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>Compact Mode</Label>
-                  <p className="text-sm text-muted-foreground">
+                  <Label className="text-sm">Compact Mode</Label>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
                     Use smaller spacing and components
                   </p>
                 </div>
@@ -405,8 +409,8 @@ export default function Settings() {
               <Separator />
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>Show Category Colors</Label>
-                  <p className="text-sm text-muted-foreground">
+                  <Label className="text-sm">Show Category Colors</Label>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
                     Display colored badges for categories
                   </p>
                 </div>
@@ -431,8 +435,8 @@ export default function Settings() {
       >
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Shield className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+              <Shield className="h-4 w-4 sm:h-5 sm:w-5" />
               Privacy & Security
             </CardTitle>
           </CardHeader>
@@ -440,8 +444,8 @@ export default function Settings() {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>Data Sharing</Label>
-                  <p className="text-sm text-muted-foreground">
+                  <Label className="text-sm">Data Sharing</Label>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
                     Share anonymized data to improve the service
                   </p>
                 </div>
@@ -456,8 +460,8 @@ export default function Settings() {
               <Separator />
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>Analytics</Label>
-                  <p className="text-sm text-muted-foreground">
+                  <Label className="text-sm">Analytics</Label>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
                     Help us understand how you use the app
                   </p>
                 </div>
@@ -472,8 +476,8 @@ export default function Settings() {
               <Separator />
               <div className="flex items-center justify-between">
                 <div>
-                  <Label>Crash Reports</Label>
-                  <p className="text-sm text-muted-foreground">
+                  <Label className="text-sm">Crash Reports</Label>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
                     Automatically send crash reports to help fix bugs
                   </p>
                 </div>
@@ -498,24 +502,25 @@ export default function Settings() {
       >
         <Card>
           <CardHeader>
-            <CardTitle>Data Management</CardTitle>
+            <CardTitle className="text-base sm:text-lg">Data Management</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-3">
-              <Button onClick={handleExportData} className="gap-2">
+            <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-3">
+              
+              <Button onClick={handleExportData} className="gap-2 text-sm">
                 <Download className="h-4 w-4" />
                 Export Data
               </Button>
-              <Button onClick={handleImportData} variant="outline" className="gap-2">
+              <Button onClick={handleImportData} variant="outline" className="gap-2 text-sm">
                 <Upload className="h-4 w-4" />
                 Import Data
               </Button>
-              <Button onClick={handleResetData} variant="destructive" className="gap-2">
+              <Button onClick={handleResetData} variant="destructive" className="gap-2 text-sm">
                 <Trash2 className="h-4 w-4" />
                 Reset All Data
               </Button>
             </div>
-            <div className="text-sm text-muted-foreground">
+            <div className="text-xs sm:text-sm text-muted-foreground space-y-1">
               <p>• Export: Download all your data in JSON format</p>
               <p>• Import: Upload previously exported data</p>
               <p>• Reset: Permanently delete all expenses, bills, and subscriptions</p>
@@ -531,7 +536,7 @@ export default function Settings() {
         transition={{ duration: 0.5, delay: 0.7 }}
         className="flex justify-end"
       >
-        <Button onClick={handleSave} size="lg" className="gap-2">
+        <Button onClick={handleSave} size="lg" className="gap-2 w-full sm:w-auto">
           <Save className="h-4 w-4" />
           Save Settings
         </Button>
