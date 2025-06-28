@@ -95,21 +95,21 @@ export default function Analytics() {
   }
 
   return (
-    <div className="space-y-8 p-6">
+    <div className="space-y-6 sm:space-y-8">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-3xl font-bold tracking-tight">Analytics</h1>
-        <p className="text-muted-foreground">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Analytics</h1>
+        <p className="text-muted-foreground text-sm sm:text-base">
           Detailed insights into your spending patterns and trends.
         </p>
       </motion.div>
 
       {/* Charts Grid */}
-      <div className="grid gap-6 lg:grid-cols-2">
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-2">
         {/* Spending by Category - Bar Chart */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -118,13 +118,13 @@ export default function Analytics() {
         >
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <BarChart3 className="h-5 w-5" />
+              <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5" />
                 Spending by Category
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
+              <ResponsiveContainer width="100%" height={250} className="sm:h-[300px]">
                 <BarChart data={categoryChartData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis 
@@ -132,8 +132,10 @@ export default function Analytics() {
                     angle={-45}
                     textAnchor="end"
                     height={80}
+                    fontSize={12}
+                    interval={0}
                   />
-                  <YAxis />
+                  <YAxis fontSize={12} />
                   <Tooltip 
                     formatter={(value) => [`$${value}`, 'Amount']}
                     labelStyle={{ color: '#000' }}
@@ -153,13 +155,13 @@ export default function Analytics() {
         >
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <PieChartIcon className="h-5 w-5" />
+              <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                <PieChartIcon className="h-4 w-4 sm:h-5 sm:w-5" />
                 Category Distribution
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
+              <ResponsiveContainer width="100%" height={250} className="sm:h-[300px]">
                 <PieChart>
                   <Pie
                     data={categoryChartData}
@@ -167,9 +169,10 @@ export default function Analytics() {
                     cy="50%"
                     labelLine={false}
                     label={({ category, percent }) => `${category} ${(percent * 100).toFixed(0)}%`}
-                    outerRadius={80}
+                    outerRadius={window.innerWidth < 640 ? 60 : 80}
                     fill="#8884d8"
                     dataKey="amount"
+                    fontSize={window.innerWidth < 640 ? 10 : 12}
                   >
                     {categoryChartData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -191,17 +194,17 @@ export default function Analytics() {
       >
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+              <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5" />
               Monthly Spending Trend
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={250} className="sm:h-[300px]">
               <LineChart data={monthlyData}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
+                <XAxis dataKey="month" fontSize={12} />
+                <YAxis fontSize={12} />
                 <Tooltip 
                   formatter={(value) => [`$${value}`, 'Amount']}
                   labelStyle={{ color: '#000' }}
@@ -211,8 +214,8 @@ export default function Analytics() {
                   dataKey="amount" 
                   stroke="#3B82F6" 
                   strokeWidth={3}
-                  dot={{ r: 6 }}
-                  activeDot={{ r: 8 }}
+                  dot={{ r: 4 }}
+                  activeDot={{ r: 6 }}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -228,31 +231,31 @@ export default function Analytics() {
       >
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Lightbulb className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+              <Lightbulb className="h-4 w-4 sm:h-5 sm:w-5" />
               Smart Insights
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {insights.map((insight, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
-                  className="p-4 rounded-lg border bg-card"
+                  className="p-3 sm:p-4 rounded-lg border bg-card"
                 >
                   <div className="flex items-start gap-3">
                     <Badge
                       variant={insight.type === 'success' ? 'default' : insight.type === 'warning' ? 'destructive' : 'secondary'}
-                      className="mt-1"
+                      className="mt-1 text-xs"
                     >
                       {insight.type === 'success' ? '✓' : insight.type === 'warning' ? '⚠' : 'ℹ'}
                     </Badge>
-                    <div>
-                      <h4 className="font-medium">{insight.title}</h4>
-                      <p className="text-sm text-muted-foreground mt-1">
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-medium text-sm sm:text-base">{insight.title}</h4>
+                      <p className="text-xs sm:text-sm text-muted-foreground mt-1">
                         {insight.description}
                       </p>
                     </div>

@@ -165,129 +165,132 @@ export default function ExpenseList() {
   }
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-4 sm:space-y-6">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+        className="flex flex-col gap-4"
       >
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Expense List</h1>
-          <p className="text-gray-600">
-            Manage and track all your expenses in one place.
-          </p>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900">Expense List</h1>
+            <p className="text-gray-600 text-sm sm:text-base">
+              Manage and track all your expenses in one place.
+            </p>
+          </div>
+
+          <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+            <DialogTrigger asChild>
+              <Button className="gap-2 w-full sm:w-auto">
+                <Plus className="h-4 w-4" />
+                <span className="sm:inline">Add Expense</span>
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md mx-4 sm:mx-0">
+              <DialogHeader>
+                <DialogTitle>Add New Expense</DialogTitle>
+              </DialogHeader>
+              <form onSubmit={handleAddExpense} className="space-y-4">
+                <div>
+                  <Label htmlFor="purpose">Purpose</Label>
+                  <Input
+                    id="purpose"
+                    value={formData.purpose}
+                    onChange={(e) => setFormData(prev => ({ ...prev, purpose: e.target.value }))}
+                    placeholder="What did you spend on?"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="amount">Amount</Label>
+                  <Input
+                    id="amount"
+                    type="number"
+                    step="0.01"
+                    value={formData.amount}
+                    onChange={(e) => setFormData(prev => ({ ...prev, amount: e.target.value }))}
+                    placeholder="0.00"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="category">Category</Label>
+                  <Select
+                    value={formData.category}
+                    onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}
+                    required
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {EXPENSE_CATEGORIES.map((category) => (
+                        <SelectItem key={category} value={category}>
+                          {category}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label>Date</Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full justify-start text-left font-normal",
+                          !formData.date && "text-muted-foreground"
+                        )}
+                      >
+                        <CalendarIcon className="mr-2 h-4 w-4" />
+                        {formData.date ? format(formData.date, "PPP") : <span>Pick a date</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0">
+                      <Calendar
+                        mode="single"
+                        selected={formData.date}
+                        onSelect={(date) => date && setFormData(prev => ({ ...prev, date }))}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+
+                <div>
+                  <Label htmlFor="description">Description (Optional)</Label>
+                  <Textarea
+                    id="description"
+                    value={formData.description}
+                    onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                    placeholder="Additional details..."
+                    rows={3}
+                  />
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <Button type="submit" className="flex-1">
+                    Add Expense
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setIsAddModalOpen(false)}
+                    className="flex-1 sm:flex-none"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </form>
+            </DialogContent>
+          </Dialog>
         </div>
-
-        <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
-          <DialogTrigger asChild>
-            <Button className="gap-2">
-              <Plus className="h-4 w-4" />
-              Add Expense
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle>Add New Expense</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleAddExpense} className="space-y-4">
-              <div>
-                <Label htmlFor="purpose">Purpose</Label>
-                <Input
-                  id="purpose"
-                  value={formData.purpose}
-                  onChange={(e) => setFormData(prev => ({ ...prev, purpose: e.target.value }))}
-                  placeholder="What did you spend on?"
-                  required
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="amount">Amount</Label>
-                <Input
-                  id="amount"
-                  type="number"
-                  step="0.01"
-                  value={formData.amount}
-                  onChange={(e) => setFormData(prev => ({ ...prev, amount: e.target.value }))}
-                  placeholder="0.00"
-                  required
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="category">Category</Label>
-                <Select
-                  value={formData.category}
-                  onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}
-                  required
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {EXPENSE_CATEGORIES.map((category) => (
-                      <SelectItem key={category} value={category}>
-                        {category}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Label>Date</Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={cn(
-                        "w-full justify-start text-left font-normal",
-                        !formData.date && "text-muted-foreground"
-                      )}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {formData.date ? format(formData.date, "PPP") : <span>Pick a date</span>}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={formData.date}
-                      onSelect={(date) => date && setFormData(prev => ({ ...prev, date }))}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-
-              <div>
-                <Label htmlFor="description">Description (Optional)</Label>
-                <Textarea
-                  id="description"
-                  value={formData.description}
-                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                  placeholder="Additional details..."
-                  rows={3}
-                />
-              </div>
-
-              <div className="flex gap-2">
-                <Button type="submit" className="flex-1">
-                  Add Expense
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setIsAddModalOpen(false)}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </form>
-          </DialogContent>
-        </Dialog>
       </motion.div>
 
       {/* Filters */}
@@ -297,7 +300,7 @@ export default function ExpenseList() {
         transition={{ duration: 0.5, delay: 0.1 }}
       >
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="pt-4 sm:pt-6">
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="flex-1">
                 <div className="relative">
@@ -337,13 +340,13 @@ export default function ExpenseList() {
       >
         <Card>
           <CardHeader>
-            <CardTitle className="text-gray-900">
+            <CardTitle className="text-gray-900 text-lg sm:text-xl">
               All Expenses ({filteredExpenses.length})
             </CardTitle>
           </CardHeader>
           <CardContent>
             {filteredExpenses.length > 0 ? (
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 <AnimatePresence>
                   {filteredExpenses.map((expense, index) => (
                     <motion.div
@@ -352,14 +355,14 @@ export default function ExpenseList() {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
                       transition={{ duration: 0.3, delay: index * 0.02 }}
-                      className="group flex items-center justify-between p-4 rounded-lg border bg-card hover:bg-accent/50 transition-all duration-200"
+                      className="group flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 rounded-lg border bg-card hover:bg-accent/50 transition-all duration-200 gap-3 sm:gap-4"
                     >
-                      <div className="flex-1">
-                        <div className="flex items-center gap-3">
-                          <div>
-                            <p className="font-medium text-gray-900">{expense.purpose}</p>
-                            <div className="flex items-center gap-2 mt-1">
-                              <p className="text-sm text-gray-500">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start gap-3">
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-gray-900 text-sm sm:text-base truncate">{expense.purpose}</p>
+                            <div className="flex flex-wrap items-center gap-2 mt-1">
+                              <p className="text-xs sm:text-sm text-gray-500">
                                 {format(new Date(expense.date), 'MMM dd, yyyy')}
                               </p>
                               {isToday(new Date(expense.date)) && (
@@ -371,22 +374,24 @@ export default function ExpenseList() {
                           </div>
                         </div>
                         {expense.description && (
-                          <p className="text-sm text-gray-500 mt-2">
+                          <p className="text-xs sm:text-sm text-gray-500 mt-2 line-clamp-2">
                             {expense.description}
                           </p>
                         )}
                       </div>
-                      <div className="flex items-center gap-4">
-                        <Badge
-                          variant="outline"
-                          className={getCategoryColor(expense.category)}
-                        >
-                          {expense.category}
-                        </Badge>
-                        <p className="font-semibold text-lg text-gray-900">
-                          ${Number(expense.amount).toFixed(2)}
-                        </p>
-                        <div className="opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
+                      <div className="flex flex-row sm:flex-row items-center justify-between sm:justify-end gap-3 sm:gap-4">
+                        <div className="flex items-center gap-2 sm:gap-3">
+                          <Badge
+                            variant="outline"
+                            className={`${getCategoryColor(expense.category)} text-xs whitespace-nowrap`}
+                          >
+                            {expense.category}
+                          </Badge>
+                          <p className="font-semibold text-base sm:text-lg text-gray-900 whitespace-nowrap">
+                            ${Number(expense.amount).toFixed(2)}
+                          </p>
+                        </div>
+                        <div className="opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity flex gap-1">
                           <Button
                             size="sm"
                             variant="ghost"
@@ -402,9 +407,9 @@ export default function ExpenseList() {
                 </AnimatePresence>
               </div>
             ) : (
-              <div className="text-center py-12">
-                <p className="text-gray-600 text-lg">No expenses found</p>
-                <p className="text-sm text-gray-500 mt-1">
+              <div className="text-center py-8 sm:py-12">
+                <p className="text-gray-600 text-base sm:text-lg">No expenses found</p>
+                <p className="text-xs sm:text-sm text-gray-500 mt-1">
                   {searchQuery || selectedCategory !== 'all'
                     ? 'Try adjusting your filters'
                     : 'Add your first expense to get started'
