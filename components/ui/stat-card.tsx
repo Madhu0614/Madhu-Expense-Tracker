@@ -46,7 +46,7 @@ export function StatCard({
                 whileHover={{ scale: 1.1, rotate: 5 }}
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
               >
-                <Icon className="h-6 w-6 text-white" />
+                <Icon className="h-6 w-6 text-black" />
               </motion.div>
               
               {trend && (
@@ -78,12 +78,12 @@ export function StatCard({
             </div>
 
             <div className="space-y-2">
-              <p className="text-sm font-medium text-white/80 tracking-wide">
+              <p className="text-sm font-medium text-black/80 tracking-wide">
                 {title}
               </p>
               
               <motion.p 
-                className="text-3xl font-bold text-white gradient-text"
+                className="text-3xl font-bold text-black gradient-text"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1, duration: 0.5 }}
@@ -92,7 +92,7 @@ export function StatCard({
               </motion.p>
               
               <motion.p 
-                className="text-sm text-white/60"
+                className="text-sm text-black/60"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3, duration: 0.5 }}

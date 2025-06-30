@@ -53,42 +53,56 @@ export default function BillReminders() {
     }
   }
 
-  async function handleAddBill(e: React.FormEvent) {
-    e.preventDefault();
-    
-    try {
-      const { data, error } = await supabase
-        .from('bills')
-        .insert([
-          {
-            name: formData.name,
-            amount: parseFloat(formData.amount),
-            category: formData.category,
-            due_date: format(formData.due_date, 'yyyy-MM-dd'),
-            is_paid: false
-          }
-        ])
-        .select()
-        .single();
+async function handleAddBill(e: React.FormEvent) {
+  e.preventDefault();
 
-      if (error) throw error;
+  try {
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
 
-      setBills(prev => [...prev, data].sort((a, b) => 
-        new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
-      ));
-      setIsAddModalOpen(false);
-      setFormData({
-        name: '',
-        amount: '',
-        category: '',
-        due_date: new Date()
-      });
-      toast.success('Bill reminder added successfully!');
-    } catch (error) {
-      console.error('Error adding bill:', error);
-      toast.error('Failed to add bill reminder');
-    }
+    if (userError) throw userError;
+    if (!user) throw new Error('User not authenticated');
+
+    const { data, error } = await supabase
+      .from('bills')
+      .insert([
+        {
+          user_id: user.id, 
+          name: formData.name,
+          amount: parseFloat(formData.amount),
+          category: formData.category,
+          due_date: format(formData.due_date, 'yyyy-MM-dd'),
+          is_paid: false,
+        },
+      ])
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    setBills((prev) =>
+      [...prev, data].sort(
+        (a, b) => new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
+      )
+    );
+
+    setIsAddModalOpen(false);
+    setFormData({
+      name: '',
+      amount: '',
+      category: '',
+      due_date: new Date(),
+    });
+
+    toast.success('Bill reminder added successfully!');
+  } catch (error) {
+    console.error('Error adding bill:', error);
+    toast.error('Failed to add bill reminder');
   }
+}
+
 
   async function handleTogglePaid(id: string, isPaid: boolean) {
     try {

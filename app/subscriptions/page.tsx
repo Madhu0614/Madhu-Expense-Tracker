@@ -55,43 +55,57 @@ export default function Subscriptions() {
   }
 
   async function handleAddSubscription(e: React.FormEvent) {
-    e.preventDefault();
-    
-    try {
-      const { data, error } = await supabase
-        .from('subscriptions')
-        .insert([
-          {
-            name: formData.name,
-            amount: parseFloat(formData.amount),
-            category: formData.category,
-            billing_cycle: formData.billing_cycle,
-            next_payment: format(formData.next_payment, 'yyyy-MM-dd'),
-            is_active: true
-          }
-        ])
-        .select()
-        .single();
+  e.preventDefault();
 
-      if (error) throw error;
+  try {
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
 
-      setSubscriptions(prev => [...prev, data].sort((a, b) => 
-        new Date(a.next_payment).getTime() - new Date(b.next_payment).getTime()
-      ));
-      setIsAddModalOpen(false);
-      setFormData({
-        name: '',
-        amount: '',
-        category: '',
-        billing_cycle: 'monthly',
-        next_payment: new Date()
-      });
-      toast.success('Subscription added successfully!');
-    } catch (error) {
-      console.error('Error adding subscription:', error);
-      toast.error('Failed to add subscription');
-    }
+    if (userError) throw userError;
+    if (!user) throw new Error('User not authenticated');
+
+    const { data, error } = await supabase
+      .from('subscriptions')
+      .insert([
+        {
+          user_id: user.id, 
+          name: formData.name,
+          amount: parseFloat(formData.amount),
+          category: formData.category,
+          billing_cycle: formData.billing_cycle,
+          next_payment: format(formData.next_payment, 'yyyy-MM-dd'),
+          is_active: true,
+        },
+      ])
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    setSubscriptions((prev) =>
+      [...prev, data].sort(
+        (a, b) => new Date(a.next_payment).getTime() - new Date(b.next_payment).getTime()
+      )
+    );
+
+    setIsAddModalOpen(false);
+    setFormData({
+      name: '',
+      amount: '',
+      category: '',
+      billing_cycle: 'monthly',
+      next_payment: new Date(),
+    });
+
+    toast.success('Subscription added successfully!');
+  } catch (error) {
+    console.error('Error adding subscription:', error);
+    toast.error('Failed to add subscription');
   }
+}
+
 
   async function handleToggleActive(id: string, isActive: boolean) {
     try {
